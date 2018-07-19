@@ -1,0 +1,19 @@
+<html xmlns:v-bind="http://www.w3.org/1999/xhtml">
+<head>
+  <script src="/js/vue.js"></script>
+  <script src="/js/brython_dist.js"></script>
+</head>
+<body onload="brython({debug: 1, pythonpath: '/'})">
+<div id="app"></div>
+<script type="text/python">
+  from vue import *
+  class OnClickMethod(VueComponent):
+    message = "message"
+    template = "<button @click='reverse' id='btn'>{{ message }}</button>"
+
+    def reverse(self, event):
+        self.message = "".join(reversed(self.message))
+  app = OnClickMethod('#app')
+</script>
+</body>
+</html>

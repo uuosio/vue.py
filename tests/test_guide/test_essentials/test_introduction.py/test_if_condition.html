@@ -1,0 +1,19 @@
+<html xmlns:v-bind="http://www.w3.org/1999/xhtml">
+<head>
+  <script src="/js/vue.js"></script>
+  <script src="/js/brython_dist.js"></script>
+</head>
+<body onload="brython({debug: 1, pythonpath: '/'})">
+<div id="app"></div>
+<script type="text/python">
+  from vue import *
+  class IfCondition(VueComponent):
+    show = False
+    template = "<div>" \
+               "    <div id='notpresent' v-if='show'>DONT SHOW</div>" \
+               "    <div id='present' />" \
+               "</div>"
+  app = IfCondition('#app')
+</script>
+</body>
+</html>

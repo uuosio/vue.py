@@ -1,0 +1,30 @@
+<html xmlns:v-bind="http://www.w3.org/1999/xhtml">
+<head>
+  <script src="/js/vue.js"></script>
+  <script src="/js/brython_dist.js"></script>
+</head>
+<body onload="brython({debug: 1, pythonpath: '/'})">
+<div id="app"></div>
+<script type="text/python">
+  from vue import *
+  def app(el):
+    class SubComponent(VueComponent):
+        prop: str
+
+        def created(self):
+            self.prop = "HALLO"
+
+        template = "<div>{{ prop }}</div>"
+
+    SubComponent.register()
+
+    class App(VueComponent):
+        template = """
+        <sub-component id="component" prop="text"></sub-component>
+        """
+
+    return App(el)
+  app = app('#app')
+</script>
+</body>
+</html>

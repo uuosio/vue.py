@@ -1,0 +1,20 @@
+<html xmlns:v-bind="http://www.w3.org/1999/xhtml">
+<head>
+  <script src="/js/vue.js"></script>
+  <script src="/js/brython_dist.js"></script>
+</head>
+<body onload="brython({debug: 1, pythonpath: '/'})">
+<div id="app"></div>
+<script type="text/python">
+  from vue import *
+  class InlineHandler(VueComponent):
+    message = ""
+    def change(self, to):
+        self.message = to
+    template = """
+    <button @click="change('changed')" id="btn">{{ message }}</button>
+    """
+  app = InlineHandler('#app')
+</script>
+</body>
+</html>

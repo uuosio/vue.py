@@ -1,0 +1,20 @@
+<html xmlns:v-bind="http://www.w3.org/1999/xhtml">
+<head>
+  <script src="/js/vue.js"></script>
+  <script src="/js/brython_dist.js"></script>
+</head>
+<body onload="brython({debug: 1, pythonpath: '/'})">
+<div id="app"></div>
+<script type="text/python">
+  from vue import *
+  def app_with_props_data(el):
+    class App(VueComponent):
+        text: str
+        template = """
+        <div id="el">{{ text }}</div>
+        """
+    return App(el, text="TEXT")
+  app = app_with_props_data('#app')
+</script>
+</body>
+</html>
