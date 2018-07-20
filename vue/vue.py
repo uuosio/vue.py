@@ -1,7 +1,7 @@
 from browser import window
 import javascript
 
-from .wrapper import Vue, Object
+from .wrapper import Object
 
 
 def _inject_vue_instance(fn, first_arg_is_this=False):
@@ -9,8 +9,18 @@ def _inject_vue_instance(fn, first_arg_is_this=False):
         args = list(args)
         vue_instance = javascript.this() if not first_arg_is_this \
             else args.pop(0)
-        return Object.to_js(fn(Vue(vue_instance), *args, **kwargs))
+        fn_wrapped = _wrap_in_and_out_types(fn)
+        return fn_wrapped(vue_instance, *args, **kwargs)
     return fn_
+
+
+def _wrap_in_and_out_types(fn):
+    def wrapper(*args, **kwargs):
+        args = tuple(Object.from_js(arg) for arg in args)
+        kwargs = {k: Object.from_js(v) for k, v in kwargs.items()}
+        return Object.to_js(fn(*args, **kwargs))
+    wrapper.__name__ = fn.__name__
+    return wrapper
 
 
 def _wrap_coroutine(coroutine):
@@ -60,6 +70,7 @@ def computed(fn):
 
 
 def directive(fn):
+    fn =  _wrap_in_and_out_types(fn)
     fn.vue_directive = True
     return fn
 
@@ -67,7 +78,7 @@ def directive(fn):
 class Validator:
     def __init__(self, prop, fn):
         self.prop = prop
-        self.fn = fn
+        self.fn = _inject_vue_instance(fn)
 
 
 def validator(prop):
@@ -88,6 +99,7 @@ def watch(name, deep=False, immediate=False):
 
 
 def filters(fn):
+    fn = _wrap_in_and_out_types(fn)
     fn.vue_filter = True
     return fn
 
@@ -179,7 +191,7 @@ class VueComponent:
             elif obj_name in getattr(cls, "__annotations__", {}):
                 pass
             elif isinstance(obj, Validator):
-                validators[obj.prop] = _inject_vue_instance(obj.fn)
+                validators[obj.prop] = obj.fn
             elif isinstance(obj, Model):
                 object_map["model"] = obj.to_vue_object()
             else:

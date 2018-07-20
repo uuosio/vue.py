@@ -1,6 +1,4 @@
 ## Features
-* make $-methods available
-  * e.g. `$emit`
 * plugins
 * local component registration
 * global filter registration
@@ -8,6 +6,7 @@
 * ...
 
 ## Docs
+* embed examples in gallery
 
 ## Tools
 * cmd line tool to init vue.py project
@@ -18,6 +17,7 @@
   * needs very long to load page
 
 ## Vue.py Universe
+* python version of vue-router
 * python version of vuex
   * synchronize over WebSockets with python backend
 * desktop toolkit
