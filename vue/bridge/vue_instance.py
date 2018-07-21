@@ -1,7 +1,7 @@
 from .object import Object
 
 
-class Vue(Object):
+class VueInstance(Object):
     @staticmethod
     def __can_wrap__(obj):
         return hasattr(obj, "_isVue") and obj._isVue
@@ -20,8 +20,8 @@ class Vue(Object):
         elif hasattr(getattr(self, key), "__set__"):
             getattr(self, key).__set__(value)
         else:
-            if key not in dir(getattr(self._js, "$props")):
+            if key not in dir(getattr(self._js, "$props", [])):
                 setattr(self._js, key, value)
 
 
-Object.SubClasses.append(Vue)
+Object.SubClasses.append(VueInstance)
