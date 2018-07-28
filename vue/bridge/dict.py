@@ -17,11 +17,7 @@ class Dict(Object):
         return other == {k: v for k, v in self.items()}
 
     def __getitem__(self, item):
-        if str(type(self._js)) == "<undefined>":  # Workaround
-            for key, value in window.Object.entries(self._js):
-                if key == item:
-                    return Object.from_js(value)
-        return Object.from_js(self._js[item])
+        return Object.from_js(getattr(self._js, item))
 
     def __iter__(self):
         return (k for k in self.keys())
@@ -55,7 +51,7 @@ class Dict(Object):
         if key not in self:
             window.Vue.set(self._js, Object.to_js(key), Object.to_js(value))
         else:
-            self._js[Object.to_js(key)] = Object.to_js(value)
+            setattr(self._js, Object.to_js(key), Object.to_js(value))
 
     def get(self, k, default=None):
         if k not in self:
@@ -76,7 +72,7 @@ class Dict(Object):
             self.popitem()
 
     @classmethod
-    def fromkeys(seq):
+    def fromkeys(cls, seq):
         raise NotImplementedError()
 
     def copy(self):
@@ -91,6 +87,9 @@ class Dict(Object):
         return [Object.from_js(key) for key in self._js]
 
     def __str__(self):
+        if hasattr(self, "toString"):
+            if callable(self.toString):
+                return self.toString()
         return repr(self)
 
     def __repr__(self):
@@ -106,7 +105,10 @@ class Dict(Object):
         return len(self) > 0
 
     def __getattr__(self, item):
-        return self[item]
+        try:
+            return self[item]
+        except KeyError:
+            raise AttributeError(item)
 
     def __setattr__(self, key, value):
         if key in ["_js"]:
