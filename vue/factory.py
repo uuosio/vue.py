@@ -9,18 +9,48 @@ from .decorators.directive import DirectiveHook
 from .decorators.extends import Extends
 
 
-def merge_templates(base, sub):
-    if getattr(sub, "template_merging", False):
-        base_template = merge_templates(base.__bases__[0], base)
-        base_slots = getattr(base, "template_slots", {})
-        sub_slots = getattr(sub, "template_slots", {})
-        templates = dict(tuple(base_slots.items())
-                         + tuple(sub_slots.items()))
-        return base_template.format(sub.template, **templates)
+def merge_templates(sub):
+    def get_template_slots(cls):
+        template_slots = getattr(cls, "template_slots", {})
+        if isinstance(template_slots, str):
+            template_slots = {"default": template_slots}
+        return template_slots
+
+    base = sub.__base__
+    template_merging = hasattr(base, "template") \
+                       and getattr(sub, "template_slots", False)
+    if template_merging:
+        base_template = merge_templates(base)
+        base_slots = get_template_slots(base)
+        sub_slots = get_template_slots(sub)
+        slots = dict(tuple(base_slots.items()) + tuple(sub_slots.items()))
+        default = slots.get("default")
+        return base_template.format(default, **slots)
     return getattr(sub, "template", "{}")
 
 
-class Wrapper:
+class BrythonObjectWorkarounds(type):
+    """
+    Fixes the following Brython bugs:
+    * https://github.com/brython-dev/brython/issues/905
+    * https://github.com/brython-dev/brython/issues/904
+    """
+    def __init__(cls, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        bases = cls.__bases__
+        cls.__bases__ = bases if bases else (object,)
+        if not hasattr(cls, "__annotations__"):
+            cls.__annotations__ = {}
+        cls.__annotations__.update(getattr(cls.__base__,
+                                           "__annotations__",
+                                           {}))
+
+    @property
+    def __base__(cls):
+        return cls.__bases__[0]
+
+
+class Wrapper(metaclass=BrythonObjectWorkarounds):
     pass
 
 
@@ -33,16 +63,13 @@ class AttributeDictFactory:
 
     @classmethod
     def get_wrapper_base(cls, wrapper):
-        base = wrapper.__bases__[0]
-        if len(base.__bases__) and base.__bases__[0] is not Wrapper:
-            base = cls.get_wrapper_base(base)
-        if not base:
-            raise Exception("Cannot build {}".format(wrapper))
-        return base
+        base = wrapper.__base__
+        if base is Wrapper:
+            return wrapper
+        return cls.get_wrapper_base(base)
 
     def __init__(self, wrapper):
         self.wrapper = wrapper
-        self.parent = self.wrapper.__bases__[0]
         self.base = self.get_wrapper_base(wrapper)
 
     def __attributes__(self):
@@ -77,10 +104,11 @@ class VueComponentFactory(AttributeDictFactory):
         if obj_name in LifecycleHook.mapping:
             obj = LifecycleHook(obj_name, obj)
         elif obj_name == "template":
-            obj = Template(merge_templates(self.parent, self.wrapper))
+            obj = Template(merge_templates(self.wrapper))
         elif obj_name == "extends":
             if obj:
-                extends = self.parent if isinstance(obj, bool) else obj
+                extends = self.wrapper.__base__ if isinstance(obj, bool) \
+                    else obj
                 obj = Extends(VueComponentFactory.get_item(extends))
         elif obj_name == "mixins":
             obj = Mixins(*(VueComponentFactory.get_item(m) for m in obj))
