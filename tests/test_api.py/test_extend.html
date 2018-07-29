@@ -1,0 +1,32 @@
+<html xmlns:v-bind="http://www.w3.org/1999/xhtml">
+<head>
+  <script src="/js/vue.js"></script>
+  <script src="/js/brython_dist.js"></script>
+</head>
+<body onload="brython({debug: 1, pythonpath: '/'})">
+<div id="app"></div>
+<script type="text/python">
+  from vue import *
+  def extended_component(el):
+    class Base(VueComponent):
+        template = "<div id='comps'>{{ components_string }}</div>"
+        components = []
+
+        def created(self):
+            self.components.append("BASE")
+
+        @computed
+        def components_string(self):
+            return " ".join(self.components)
+
+    class Sub(Base):
+        extends = True
+
+        def created(self):
+            self.components.append("SUB")
+
+    return Sub(el)
+  app = extended_component('#app')
+</script>
+</body>
+</html>

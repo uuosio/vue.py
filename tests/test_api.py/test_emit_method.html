@@ -10,6 +10,7 @@
   def call_emit(el):
     class Emitter(VueComponent):
         template = "<p></p>"
+
         def created(self):
             self.emit("creation", "YES")
     Emitter.register()
@@ -22,6 +23,7 @@
             <div id='el'>{{ text }}</div>
         </div>
         """
+
         def change(self, ev=None):
             self.text = ev
     return App(el)

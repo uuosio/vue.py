@@ -6,6 +6,18 @@ from .decorators.method import Method
 from .decorators.mixins import Mixins
 from .decorators.template import Template
 from .decorators.directive import DirectiveHook
+from .decorators.extends import Extends
+
+
+def merge_templates(base, sub):
+    if getattr(sub, "template_merging", False):
+        base_template = merge_templates(base.__bases__[0], base)
+        base_slots = getattr(base, "template_slots", {})
+        sub_slots = getattr(sub, "template_slots", {})
+        templates = dict(tuple(base_slots.items())
+                         + tuple(sub_slots.items()))
+        return base_template.format(sub.template, **templates)
+    return getattr(sub, "template", "{}")
 
 
 class Wrapper:
@@ -21,16 +33,16 @@ class AttributeDictFactory:
 
     @classmethod
     def get_wrapper_base(cls, wrapper):
-        if Wrapper in wrapper.__bases__:
-            return wrapper
-        for base in wrapper.__bases__:
-            sub = cls.get_wrapper_base(base)
-            if sub:
-                return sub
-        raise Exception("Cannot build {}".format(wrapper))
+        base = wrapper.__bases__[0]
+        if len(base.__bases__) and base.__bases__[0] is not Wrapper:
+            base = cls.get_wrapper_base(base)
+        if not base:
+            raise Exception("Cannot build {}".format(wrapper))
+        return base
 
     def __init__(self, wrapper):
         self.wrapper = wrapper
+        self.parent = self.wrapper.__bases__[0]
         self.base = self.get_wrapper_base(wrapper)
 
     def __attributes__(self):
@@ -65,9 +77,13 @@ class VueComponentFactory(AttributeDictFactory):
         if obj_name in LifecycleHook.mapping:
             obj = LifecycleHook(obj_name, obj)
         elif obj_name == "template":
-            obj = Template(obj)
+            obj = Template(merge_templates(self.parent, self.wrapper))
+        elif obj_name == "extends":
+            if obj:
+                extends = self.parent if isinstance(obj, bool) else obj
+                obj = Extends(VueComponentFactory.get_item(extends))
         elif obj_name == "mixins":
-            obj = Mixins([VueComponentFactory.get_item(m) for m in obj])
+            obj = Mixins(*(VueComponentFactory.get_item(m) for m in obj))
         elif callable(obj):
             obj = Method(obj)
         elif obj_name in getattr(self.wrapper, "__annotations__", {}):
