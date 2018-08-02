@@ -7,6 +7,7 @@ from .decorators.mixins import Mixins
 from .decorators.template import Template
 from .decorators.directive import DirectiveHook
 from .decorators.extends import Extends
+from .decorators.components import Components
 
 
 def merge_templates(sub):
@@ -37,13 +38,6 @@ class BrythonObjectWorkarounds(type):
     """
     def __init__(cls, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        bases = cls.__bases__
-        cls.__bases__ = bases if bases else (object,)
-        if not hasattr(cls, "__annotations__"):
-            cls.__annotations__ = {}
-        cls.__annotations__.update(getattr(cls.__base__,
-                                           "__annotations__",
-                                           {}))
 
     @property
     def __base__(cls):
@@ -57,9 +51,9 @@ class Wrapper(metaclass=BrythonObjectWorkarounds):
 class AttributeDictFactory:
     @classmethod
     def get_item(cls, wrapper):
-        if isinstance(wrapper, dict):
-            return wrapper
-        return cls(wrapper).generate_item()
+        if isinstance(wrapper, BrythonObjectWorkarounds):
+            return cls(wrapper).generate_item()
+        return wrapper
 
     @classmethod
     def get_wrapper_base(cls, wrapper):
@@ -112,6 +106,8 @@ class VueComponentFactory(AttributeDictFactory):
                 obj = Extends(VueComponentFactory.get_item(extends))
         elif obj_name == "mixins":
             obj = Mixins(*(VueComponentFactory.get_item(m) for m in obj))
+        elif obj_name == "components":
+            obj = Components(*(VueComponentFactory.get_item(m) for m in obj))
         elif callable(obj):
             obj = Method(obj)
         elif obj_name in getattr(self.wrapper, "__annotations__", {}):
