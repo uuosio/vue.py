@@ -1,0 +1,38 @@
+<html xmlns:v-bind="http://www.w3.org/1999/xhtml">
+<head>
+  <script src="/js/vue.js"></script>
+  <script src="/js/vuex.js"></script>
+  <script src="/js/brython_dist.js"></script>
+</head>
+<body onload="brython({debug: 1, pythonpath: '/'})">
+<div id="app"></div>
+<script type="text/python">
+  from vue import *
+  def app(el):
+    class Store(VueStore):
+        message = ""
+
+        @staticmethod
+        @mutation
+        def mutate_message(state, new_message):
+            state["message"] = new_message
+
+        @staticmethod
+        @action
+        def change_message(context, new_message):
+            context.commit("mutate_message", new_message)
+
+    class ComponentUsingAction(VueComponent):
+        def created(self):
+            self.store.dispatch("change_message", "Message")
+
+        @computed
+        def message(self):
+            return self.store.state.message
+
+        template = "<div id='content'>{{ message }}</div>"
+    return ComponentUsingAction(el, store=Store())
+  app = app('#app')
+</script>
+</body>
+</html>

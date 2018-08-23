@@ -1,6 +1,5 @@
 from browser import window
-from .factory import VueComponentFactory, Wrapper, \
-    VueDirectiveFactory
+from .factory import VueComponentFactory, Wrapper, VueDirectiveFactory
 from .bridge import Object
 from .decorators.directive import DirectiveHook
 from .decorators.filters import Filter
@@ -59,10 +58,12 @@ class VueComponent(Wrapper):
     def init_dict(cls):
         return VueComponentFactory.get_item(cls)
 
-    def __new__(cls, el, **data):
+    def __new__(cls, el, store=None, **data):
         init_dict = cls.init_dict()
         init_dict.update(el=el)
         init_dict.update(propsData=data)
+        if store:
+            init_dict.update(store=store)
         return Object.from_js(window.Vue.new(init_dict))
 
     @classmethod

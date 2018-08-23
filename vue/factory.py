@@ -8,6 +8,8 @@ from .decorators.template import Template
 from .decorators.directive import DirectiveHook
 from .decorators.extends import Extends
 from .decorators.components import Components
+from .decorators.state import State
+from .decorators.plugin import Plugin
 
 
 def merge_templates(sub):
@@ -149,3 +151,12 @@ class VueDirectiveFactory(AttributeDictFactory):
         default = {wrapper.name: {}}
         dct = super().get_item(wrapper)
         return dct.get("directives", default).popitem()[1]
+
+
+class VueStoreFactory(AttributeDictFactory):
+    def auto_decorate(self, obj_name, obj):
+        if obj_name == "plugins":
+            obj = Plugin(obj)
+        elif not isinstance(obj, VueDecorator):
+            obj = State(obj_name, obj)
+        return super().auto_decorate(obj_name, obj)

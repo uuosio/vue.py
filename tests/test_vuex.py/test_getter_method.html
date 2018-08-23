@@ -1,0 +1,30 @@
+<html xmlns:v-bind="http://www.w3.org/1999/xhtml">
+<head>
+  <script src="/js/vue.js"></script>
+  <script src="/js/vuex.js"></script>
+  <script src="/js/brython_dist.js"></script>
+</head>
+<body onload="brython({debug: 1, pythonpath: '/'})">
+<div id="app"></div>
+<script type="text/python">
+  from vue import *
+  def app(el):
+    class Store(VueStore):
+        message = "Message"
+
+        @staticmethod
+        @getter_method
+        def msg(state, getters, prefix):
+            return prefix + state["message"]
+
+    class ComponentUsingGetter(VueComponent):
+        @computed
+        def message(self):
+            return self.store.getters.msg("pre")
+
+        template = "<div id='content'>{{ message }}</div>"
+    return ComponentUsingGetter(el, store=Store())
+  app = app('#app')
+</script>
+</body>
+</html>
