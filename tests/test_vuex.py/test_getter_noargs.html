@@ -10,26 +10,19 @@
   from vue import *
   def app(el):
     class Store(VueStore):
-        message = ""
+        message = "Message"
 
-        @mutation
-        def mutate_message(self, new_message):
-            self.message = new_message
+        @getter
+        def msg(self):
+            return self.message
 
-        @action
-        def change_message(self, new_message):
-            self.commit("mutate_message", new_message)
-
-    class ComponentUsingAction(VueComponent):
-        def created(self):
-            self.store.dispatch("change_message", "Message")
-
+    class ComponentUsingGetter(VueComponent):
         @computed
         def message(self):
-            return self.store.message
+            return self.store.msg
 
         template = "<div id='content'>{{ message }}</div>"
-    return ComponentUsingAction(el, store=Store())
+    return ComponentUsingGetter(el, store=Store())
   app = app('#app')
 </script>
 </body>

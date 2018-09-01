@@ -15,7 +15,7 @@
     class ComponentUsingStore(VueComponent):
         @computed
         def message(self):
-            return self.store.state.message
+            return self.store.message
 
         template = "<div id='content'>{{ message }}</div>"
     return ComponentUsingStore(el, store=Store())

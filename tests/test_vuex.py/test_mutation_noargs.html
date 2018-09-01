@@ -10,20 +10,20 @@
   from vue import *
   def app(el):
     class Store(VueStore):
-        message = "Message"
+        message = ""
 
-        @staticmethod
-        @getter
-        def msg(state, getters):
-            return state["message"]
+        @mutation
+        def mutate_message(self):
+            self.message = "Message"
 
-    class ComponentUsingGetter(VueComponent):
+    class ComponentUsingMutation(VueComponent):
         @computed
         def message(self):
-            return self.store.getters.msg
+            self.store.commit("mutate_message")
+            return self.store.message
 
         template = "<div id='content'>{{ message }}</div>"
-    return ComponentUsingGetter(el, store=Store())
+    return ComponentUsingMutation(el, store=Store())
   app = app('#app')
 </script>
 </body>

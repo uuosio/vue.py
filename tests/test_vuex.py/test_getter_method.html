@@ -12,15 +12,14 @@
     class Store(VueStore):
         message = "Message"
 
-        @staticmethod
-        @getter_method
-        def msg(state, getters, prefix):
-            return prefix + state["message"]
+        @getter
+        def msg(self, prefix):
+            return prefix + self.message
 
     class ComponentUsingGetter(VueComponent):
         @computed
         def message(self):
-            return self.store.getters.msg("pre")
+            return self.store.msg("pre")
 
         template = "<div id='content'>{{ message }}</div>"
     return ComponentUsingGetter(el, store=Store())

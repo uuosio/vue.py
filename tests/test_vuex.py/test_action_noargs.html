@@ -17,12 +17,12 @@
             self.message = new_message
 
         @action
-        def change_message(self, new_message):
-            self.commit("mutate_message", new_message)
+        def change_message(self):
+            self.commit("mutate_message", "Message")
 
     class ComponentUsingAction(VueComponent):
         def created(self):
-            self.store.dispatch("change_message", "Message")
+            self.store.dispatch("change_message")
 
         @computed
         def message(self):
