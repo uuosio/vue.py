@@ -1,15 +1,29 @@
 <html>
 <head>
-  <script src="../../js/vue.js"></script>
-  <script src="../../js/brython_dist.js"></script>
+  <script src="_js/vue.js"></script>
+  <script src="_js/vuex.js"></script>
+  <script src="_js/brython_dist.js"></script>
+
+  
   <link rel="stylesheet" media="screen" href="style.css">
+  
+
+  
+    <script src="https://unpkg.com/marked@0.3.6"></script>
+  
 </head>
-<body onload="brython({debug: 1, pythonpath: ['../..']})">
-  <script src="https://unpkg.com/marked@0.3.6"></script>
-  <div id="editor">
-    <textarea :value="input" @input="update" id="markdown"></textarea>
-    <div v-html="compiled_markdown"></div>
-  </div>
+<body onload="brython(0);">
+  
+    <script type="x-template" id="editor-template">
+      <div id="editor">
+  <textarea :value="input" @input="update" id="markdown"></textarea>
+  <div v-html="compiled_markdown"></div>
+</div>
+
+    </script>
+  
+
+  <div id="app"></div>
   <script type="text/python" src="app.py"></script>
 </body>
 </html>

@@ -1,13 +1,19 @@
 <html>
 <head>
-  <script src="../../js/vue.js"></script>
-  <script src="../../js/brython_dist.js"></script>
+  <script src="_js/vue.js"></script>
+  <script src="_js/vuex.js"></script>
+  <script src="_js/brython_dist.js"></script>
+
+  
   <link rel="stylesheet" media="screen" href="style.css">
+  
+
+  
 </head>
-<body onload="brython({debug: 1, pythonpath: ['../..']})">
-  <!-- template for the modal component -->
-  <script type="text/x-template" id="modal-template">
-    <transition name="modal">
+<body onload="brython(0);">
+  
+    <script type="x-template" id="modal-template">
+          <transition name="modal">
       <div class="modal-mask">
         <div class="modal-wrapper">
           <div class="modal-container">
@@ -36,22 +42,28 @@
         </div>
       </div>
     </transition>
-  </script>
 
-  <!-- app -->
-  <div id="app">
-    <button id="show-modal" @click="show_modal = true">
-      Show Modal
-    </button>
-    <!-- use the modal component, pass in the prop -->
-    <modal v-if="show_modal" @close="show_modal = false" id="modal_view">
-      <!--
-        you can use custom content here to overwrite
-        default content
-      -->
-      <h3 slot="header">custom header</h3>
-    </modal>
-  </div>
+    </script>
+  
+    <script type="x-template" id="main">
+      <div>
+  <button id="show-modal" @click="show_modal = true">
+    Show Modal
+  </button>
+  <!-- use the modal component, pass in the prop -->
+  <modal v-if="show_modal" @close="show_modal = false" id="modal_view">
+    <!--
+      you can use custom content here to overwrite
+      default content
+    -->
+    <h3 slot="header">custom header</h3>
+  </modal>
+</div>
+
+    </script>
+  
+
+  <div id="app"></div>
   <script type="text/python" src="app.py"></script>
 </body>
 </html>

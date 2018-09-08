@@ -1,53 +1,75 @@
 <html>
 <head>
-  <script src="../../js/vue.js"></script>
-  <script src="../../js/brython_dist.js"></script>
-  <link rel="stylesheet" media="screen" href="style.css">
+  <script src="_js/vue.js"></script>
+  <script src="_js/vuex.js"></script>
+  <script src="_js/brython_dist.js"></script>
+
+  
+  <link rel="stylesheet" media="screen" href="s">
+  
+  <link rel="stylesheet" media="screen" href="t">
+  
+  <link rel="stylesheet" media="screen" href="y">
+  
+  <link rel="stylesheet" media="screen" href="l">
+  
+  <link rel="stylesheet" media="screen" href="e">
+  
+  <link rel="stylesheet" media="screen" href=".">
+  
+  <link rel="stylesheet" media="screen" href="c">
+  
+  <link rel="stylesheet" media="screen" href="s">
+  
+  <link rel="stylesheet" media="screen" href="s">
+  
+
+  
 </head>
-<body onload="brython({debug: 1, pythonpath: ['../..']})">
-  <!-- template for the polygraph component. -->
-  <script type="text/x-template" id="polygraph-template">
-    <g>
-      <polygon :points="points"></polygon>
-      <circle cx="100" cy="100" r="80"></circle>
-      <axis-label
-        v-for="(stat, index) in stats"
-        :key="index"
-        :stat="stat"
-        :index="index"
-        :total="stats.length">
-      </axis-label>
-    </g>
-  </script>
-
-  <!-- template for the axis label component. -->
-  <script type="text/x-template" id="axis-label-template">
-    <text :x="point[0]" :y="point[1]">{{stat.label}}</text>
-  </script>
-
-  <!-- demo root element -->
-  <div id="demo">
-    <!-- Use the component -->
-    <svg width="200" height="200">
-      <polygraph :stats="stats"></polygraph>
-    </svg>
-    <!-- controls -->
-    <div v-for="stat in stats">
-      <label>{{stat.label}}</label>
-      <input type="range" v-model="stat.value" min="0" max="100">
-      <span>{{stat.value}}</span>
-      <button @click="remove(stat)"
-              class="remove"
-              :disabled="disable_remove">X</button>
-    </div>
-    <form id="add">
-      <input name="new_label" v-model="new_label">
-      <button @click="add">Add a Stat</button>
-    </form>
-    <pre id="raw">{{ stats }}</pre>
+<body onload="brython(0);">
+  
+    <script type="x-template" id="app-template">
+      <div>
+  <!-- Use the component -->
+  <svg width="200" height="200">
+    <polygraph :stats="stats"></polygraph>
+  </svg>
+  <!-- controls -->
+  <div v-for="stat in stats">
+    <label>{{stat.label}}</label>
+    <input type="range" v-model="stat.value" min="0" max="100">
+    <span>{{stat.value}}</span>
+    <button @click="remove(stat)"
+            class="remove"
+            :disabled="disable_remove">X</button>
   </div>
-
+  <form id="add">
+    <input name="new_label" v-model="new_label">
+    <button @click="add">Add a Stat</button>
+  </form>
+  <pre id="raw">{{ stats }}</pre>
   <p style="font-size:12px">* input[type="range"] requires IE10 or above.</p>
+</div>
+
+    </script>
+  
+    <script type="x-template" id="polygraph-template">
+      <g>
+  <polygon :points="points"></polygon>
+  <circle cx="100" cy="100" r="80"></circle>
+  <axis-label
+    v-for="(stat, index) in stats"
+    :key="index"
+    :stat="stat"
+    :index="index"
+    :total="stats.length">
+  </axis-label>
+</g>
+
+    </script>
+  
+
+  <div id="app"></div>
   <script type="text/python" src="app.py"></script>
 </body>
 </html>
