@@ -1,29 +1,25 @@
 # Future Plans
-
-## Features
-* full access to Vue object (global configuration etc.)
-* ...
-
-## Bugs and Issues
-* investigate directive arguments
-  * different hooks get different arguments??
-* solve issue with `import asyncio`
-  * needs very long to load page
-* try dynamics example again with latest bridge changes
-
-## Docs
-* embed examples in gallery
+## Performance
+* How to improve loading times?
+* create benchmarks
 
 ## Tools
-* make available on pip
+* Docker deployment
+
+## Vue.py Universe
+* store synchronization
+  * with local/session storage
+  * over WebSockets with python backend
+* python bindings for vue-router
+* desktop toolkit
+  * based on [pywebview](https://github.com/r0x0r/pywebview) ??
+
+## Vue.js Features
+* full access to Vue object (global configuration etc.)
+* ...
 
 ## Internals
 * write tests for decorators
 
-## Vue.py Universe
-* python bindings for vuex
-  * synchronize with local/session storage
-  * synchronize over WebSockets with python backend
-* python bindings for vue-router
-* desktop toolkit
-  * based on [pywebview](https://github.com/r0x0r/pywebview) ??
+## Docs
+* embed examples in gallery
