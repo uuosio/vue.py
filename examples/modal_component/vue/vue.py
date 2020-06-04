@@ -58,13 +58,14 @@ class VueComponent(Wrapper):
     def init_dict(cls):
         return VueComponentFactory.get_item(cls)
 
-    def __new__(cls, el, store=None, **data):
+    def __new__(cls, el, **kwargs):
         init_dict = cls.init_dict()
         init_dict.update(el=el)
-        init_dict.update(propsData=data)
-        if store:
-            init_dict.update(store=store)
-        return Object.from_js(window.Vue.new(init_dict))
+        for key, value in kwargs.items():
+            if key == "props_data":
+                key = "propsData"
+            init_dict.update({key: value})
+        return Object.from_js(window.Vue.new(Object.to_js(init_dict)))
 
     @classmethod
     def register(cls, name=None):

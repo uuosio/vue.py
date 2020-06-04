@@ -26,6 +26,11 @@ class HelloVuePy(VueComponent):
 HelloVuePy("#app")
 ```
 
+## Installation
+```bash
+$ pip install vuepy
+```
+
 
 ## Development Status
 The goal is to provide a solution to write fully-featured Vue applications in pure Python.
@@ -50,12 +55,8 @@ Still figuring out how to solve this.
 Have not done any peformance tests, but havent noticed any issues with performance
 as soon as the app was fully loaded.
 
-## Installation
-```bash
-$ pip install vuepy
-```
-
 ## Development
+### Getting Started
 Get the code
 ```bash
 $ git clone https://github.com/stefanhoelzl/vue.py.git
@@ -67,16 +68,12 @@ Install required python packages, the chromedriver for selenium and brython
 $ make env.up
 ```
 
-Start server (needed for tests)
-```bash
-$ make serve
-```
-
 Run tests
 ```bash
-$ make tests          # runs all tets
-$ make tests.unit     # runs unit tests
-$ make test.selenium  # runs selenium tests
+$ make tests           # runs all tets
+$ make tests.unit      # runs unit tests
+$ make tests.selenium  # runs selenium tests
+$ make tests.cli       # runs cli tests
 ```
 
 Clean up your working directory.
@@ -88,7 +85,20 @@ Reset your development environment
 _(clean up, reinstall packages and redownload needed files)_
 ```bash
 $ make env.down
+$ make env.up
 ```
 
+### Workflow
+Development happens on the [master branch](https://github.com/stefanhoelzl/vue.py).
+This also means the latest documentation can be found 
+[here](https://github.com/stefanhoelzl/vue.py/blob/master/docs/docs/index.md).
+
+The [release branch](https://github.com/stefanhoelzl/vue.py/tree/release) 
+should always be even with the latest release.
+Changes to this branch also trigger a update of gh-pages.
+Therefor fixes to the documentation can be made on the release branch.
+So that the [documentation](https://stefanhoelzl.github.io/vue.py/docs/)
+is always valid for the latest release. 
+
 ## License
-This project is licensed under the MIT License - see the [LICENSE](https://github.com/stefanhoelzl/fancy-dict/blob/master/LICENSE) file for details
+This project is licensed under the MIT License - see the [LICENSE](https://github.com/stefanhoelzl/vue.py/blob/master/LICENSE) file for details

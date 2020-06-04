@@ -1,18 +1,18 @@
 <html>
 <head>
-  <script src="_js/vue.js"></script>
-  <script src="_js/vuex.js"></script>
-  <script src="_js/brython_dist.js"></script>
-
   
-  <link rel="stylesheet" media="screen" href="style.css">
+    <script src="vuepy.js"></script>
   
-  <link rel="stylesheet" media="screen" href="https://unpkg.com/todomvc-app-css@2.0.6/index.css">
+    <script src="vue.js"></script>
   
 
+  
+    <link rel="stylesheet" media="screen" href="style.css" />
+  
+    <link rel="stylesheet" media="screen" href="https://unpkg.com/todomvc-app-css@2.0.6/index.css" />
   
 </head>
-<body onload="brython(0);">
+<body onload="brython();">
   
     <script type="x-template" id="app-template">
       <div>
@@ -72,10 +72,8 @@
   
 
   <div id="app">
-    <img style="display: block; margin: auto;"
-         src="loading.gif"
-         height="50%">
+    <img style="display: block; margin: auto;" src="loading.gif" height="50%" />
   </div>
-  <script type="text/python" src="app.py"></script>
+  <script type="text/python" src="__entry_point__.py"></script>
 </body>
 </html>

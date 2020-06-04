@@ -14,6 +14,12 @@ class App(VueComponent):
 App("#app", store=Store())
 ```
 
+enable the vuex extension in the `vuepy.yml` [config file](../management/configuration.md):
+```yaml
+scripts:
+  vuex: true
+```
+
 ## State Variables
 ```python
 from vue import VueComponent, VueStore

@@ -10,6 +10,16 @@ Install `vue.py` via `pip`
 $ pip install vuepy
 ```
 
+or with flask include to deploy apps
+```bash
+$ pip install vuepy[flask]
+```
+
+or from current master branch
+```bash
+$ pip install git+https://github.com/stefanhoelzl/vue.py@master
+```
+
 ## First Application
 Create a folder for your app
 ```bash
@@ -28,9 +38,17 @@ App("#app")
 
 deploy your app
 ```bash
-$ vue-cli deploy live
+$ vue-cli deploy flask
 ```
 Now goto [http://localhost:5000](http://localhost:5000) and see your first vue.py app.
+
+## Demo App
+Checkout the [MQTT-Dashboard](https://github.com/stefanhoelzl/mqtt-dashboard/blob/master/app/app.py).
+It's a little test project to demonstrate some `vue.py` features:
+* uses the Browsers local storage to implement a vue-plugin in python
+* uses a vue.js plugin
+* uses some vue.js components
+* uses a vuex store
 
 ## How to use Vue.js concepts
 * [Instance and Components](vue_concepts/instance_components.md)
@@ -43,7 +61,9 @@ Now goto [http://localhost:5000](http://localhost:5000) and see your first vue.p
 * [Custom Directives](vue_concepts/custom_directives.md)
 * [Plugins and Mixins](vue_concepts/plugins_mixins.md)
 * [Extend](vue_concepts/extend.md)
+* [Render Function](vue_concepts/render_function.md)
 * [Vuex](vue_concepts/vuex.md)
+* [Vue Router](vue_concepts/vue-router.md)
 
 ## Management
 * [Configuration](management/configuration.md)
